@@ -8,8 +8,6 @@
 /* 基础样式 - 暗黑色系 */
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    background-color: #050816;
-    color: #ffffff;
     line-height: 1.6;
     min-height: 100vh;
     overflow-x: hidden;
@@ -23,35 +21,13 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #050816 0%, #090c20 50%, #0a0f2a 100%);
+    background-image: url('../assets/bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     z-index: -2;
 }
 
-/* 网格线装饰 */
-.grid-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-        linear-gradient(rgba(30, 64, 175, 0.1) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(30, 64, 175, 0.1) 1px, transparent 1px);
-    background-size: 50px 50px;
-    z-index: -1;
-    pointer-events: none;
-}
-
-/* 粒子效果容器 */
-#particles-js {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    z-index: -1;
-    pointer-events: none;
-}
 
 /* 容器样式 */
 .container {
