@@ -3,65 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI选题助手</title>
-    <link rel="stylesheet" href="css/main.css">
+    <title>Paper - AI论文写作助手</title>
+    <link rel="stylesheet" href="css/home.css">
 </head>
 <body>
-    <div class="app-container">
-        <div class="header">
+    <!-- 炫酷科技感背景 -->
+    <div class="tech-bg"></div>
+    
+    <!-- 网格线装饰 -->
+    <div class="grid-overlay"></div>
+
+    <div class="container">
+        <header class="header">
             <div class="logo">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2L15 8L21 9L17 14L18 20L12 17L6 20L7 14L3 9L9 8L12 2Z" fill="#3498db" stroke="#2980b9" stroke-width="1.5"/>
-                </svg>
-                <h1>AI选题</h1>
+                <img src="assets/logo.png" alt="Logo" class="logo-icon" />
             </div>
-        </div>
+        </header>
         
-        <div class="content-wrapper">
-            <div class="left-panel">
-                <div class="form-container">
-                    <div class="form-group">
-                        <label for="major">论文专业:</label>
-                        <span id="major">电子信息</span>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="education">论文学历:</label>
-                        <span id="education">本科</span>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="research-direction">研究方向:</label>
-                        <textarea id="research-direction" placeholder="请输入100字以内的研究方向，如：大数据与人工智能驱动下的信息管理与系统创建" maxlength="100"></textarea>
-                        <div class="character-count">0/100</div>
-                    </div>
-                    
-                    <button id="generate-btn" class="generate-button">立即生成</button>
-                    <button id="upload-btn" class="upload-button">上传文件</button>
+        <main class="main-content">
+            <section class="hero-section">
+                <h1 class="hero-title">
+                    AI工具全流程提效，论文写作快人一步
+                </h1>
+                <!-- 流畅弯曲的装饰线条替换为图片 -->
+                <img src="assets/line.png" alt="装饰线条" class="decorative-line" style="width:354px; height:42.4px; float:right; margin-right:20px;" />
+                <div style="clear:both;"></div>
+                <div class="hero-subtitle">一键生成全周期论文项目</div>
+                
+                <div class="button-container">
+                    <button id="create-project-btn" class="create-project-btn">
+                        立即创建
+                    </button>
                 </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- 创建项目弹窗 -->
+    <div id="project-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>创建我的论文项目</h2>
+                <button id="close-modal-btn" class="close-btn">&times;</button>
             </div>
-            
-            <div class="right-panel">
-                <div id="result-container">
-                    <div class="empty-state">
-                        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M11.9998 21.4385C17.2841 21.4385 21.4998 17.2227 21.4998 11.9385C21.4998 6.65421 17.2841 2.43847 11.9998 2.43847C6.71556 2.43847 2.4998 6.65421 2.4998 11.9385C2.4998 12.9902 2.74085 13.9982 3.1682 14.9165L2.11602 18.9801C1.94419 19.6391 2.43857 20.3111 3.09756 20.1393L7.16115 19.0871C8.07946 19.5145 9.08743 19.7555 10.1391 19.7555H11.9998V21.4385Z" stroke="#d0d0d0" stroke-width="1.5"/>
-                            <circle cx="8.4998" cy="10.9385" r="1.5" fill="#d0d0d0"/>
-                            <circle cx="15.4998" cy="10.9385" r="1.5" fill="#d0d0d0"/>
-                            <path d="M9.9998 15.4385C9.9998 15.4385 11.0998 14.4385 11.9998 14.4385C12.8998 14.4385 13.9998 15.4385 13.9998 15.4385" stroke="#d0d0d0" stroke-width="1.5" stroke-linecap="round"/>
-                        </svg>
-                        <p class="empty-text">请输入研究方向，点击生成按钮获取AI推荐</p>
+            <form id="project-form">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="project-name">论文项目名称 <span style="color: #ef4444;">*</span></label>
+                        <input type="text" id="project-name" placeholder="请输入名称" required>
                     </div>
-                    <div id="result-content" class="result-content" style="display: none;">
-                        <!-- AI生成的结果将显示在这里 -->
+                    <div class="form-group">
+                        <label for="project-major">论文专业 <span style="color: #ef4444;">*</span></label>
+                        <select id="project-major" required>
+                            <option value="">请选择专业</option>
+                            <option value="电子信息">电子信息</option>
+                            <option value="计算机科学">计算机科学</option>
+                            <option value="软件工程">软件工程</option>
+                            <option value="人工智能">人工智能</option>
+                            <option value="通信工程">通信工程</option>
+                            <option value="自动化">自动化</option>
+                            <option value="其他">其他</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>选择学历 <span style="color: #ef4444;">*</span></label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="education" value="专科">
+                                <span>专科</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="education" value="本科" checked>
+                                <span>本科</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="education" value="研究生">
+                                <span>研究生</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
-            </div>
+                <div class="modal-footer">
+                    <button type="button" id="cancel-create-project" class="cancel-btn">取消</button>
+                    <button type="submit" id="create-project-submit" class="submit-btn">确定</button>
+                </div>
+            </form>
         </div>
     </div>
+
     
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="js/home.js"></script>
 </body>
 </html>

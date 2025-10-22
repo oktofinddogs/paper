@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>论文项目进度 - 小吉论文</title>
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .project-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .project-meta {
+            display: flex;
+            gap: 20px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        .stage {
+            background-color: white;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .stage-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+        
+        .stage-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .stage-title .check-icon {
+            color: #27ae60;
+        }
+        
+        .stage-time {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        
+        .tools-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .tool-card {
+            width: 120px;
+            height: 120px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tool-card:hover {
+            background-color: #e9ecef;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .tool-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #3498db;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .tool-name {
+            font-size: 12px;
+            text-align: center;
+            color: #2c3e50;
+        }
+        
+        .upload-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+        
+        .upload-button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="project-title">
+                <span id="display-project-name">我的论文项目</span> <span class="project-type">科学论文</span>
+            </div>
+            <div class="project-meta">
+                <span>项目状态：<strong>进行中</strong></span>
+                <span>项目进度：<strong>0%</strong></span>
+                <span>预计完成时间：<strong>--</strong></span>
+            </div>
+        </div>
+
+        <!-- 阶段一：准备与开题阶段 -->
+        <div class="stage">
+            <div class="stage-header">
+                <div class="stage-title">
+                    <span class="check-icon">✓</span>
+                    阶段一：准备与开题阶段
+                </div>
+                <div class="stage-time">
+                    2025.11.01 - 2025.11.30
+                </div>
+            </div>
+            
+            <div class="stage-content">
+                <div class="tools-container">
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9 11H7C5.89543 11 5 11.8954 5 13V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V13C19 11.8954 18.1046 11 17 11H15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M13 11V8C13 6.89543 12.1046 6 11 6H5C3.89543 6 3 6.89543 3 8V11" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M9 17H7M9 17V15M9 17H11" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M17 17H15M17 17V15M17 17H19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="tool-name">AI选题</div>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 15L19 8M19 8L5 8M19 8V16" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M9 17L7 19M15 17L17 19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="tool-name">AI开题报告</div>
+                    </div>
+                </div>
+                
+                <button class="upload-button">上传选题</button>
+            </div>
+        </div>
+
+        <!-- 阶段二：论文写作 -->
+        <div class="stage">
+            <div class="stage-header">
+                <div class="stage-title">
+                    <span class="check-icon">✓</span>
+                    阶段二：论文写作
+                </div>
+                <div class="stage-time">
+                    2025.12.01 - 2026.03.31
+                </div>
+            </div>
+            
+            <div class="stage-content">
+                <div class="tools-container">
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9 12H9.01M13 12H13.01M17 12H17.01M5 8C5 6.34315 6.34315 5 8 5H16C17.6569 5 19 6.34315 19 8V16C19 17.6569 17.6569 19 16 19H8C6.34315 19 5 17.6569 5 16V8Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="tool-name">文献检索</div>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9 12H9.01M13 12H13.01M17 12H17.01M5 8C5 6.34315 6.34315 5 8 5H16C17.6569 5 19 6.34315 19 8V16C19 17.6569 17.6569 19 16 19H8C6.34315 19 5 17.6569 5 16V8Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M7 16V18M17 16V18" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="tool-name">AI文献阅读</div>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M21 15V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H9M3 3H17M3 3V7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="tool-name">论文写作</div>
+                    </div>
+                </div>
+                
+                <button class="upload-button">上传论文</button>
+            </div>
+        </div>
+
+        <!-- 阶段三：论文审稿与修改 -->
+        <div class="stage">
+            <div class="stage-header">
+                <div class="stage-title">
+                    <span class="check-icon">✓</span>
+                    阶段三：论文审稿与修改
+                </div>
+                <div class="stage-time">
+                    2026.04.01 - 2026.05.30
+                </div>
+            </div>
+            
+            <div class="stage-content">
+                <div class="tools-container">
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M17 3H7C5.89543 3 5 3.89543 5 5V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V5C19 3.89543 18.1046 3 17 3Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M17 9L13 13M13 13L9 9M13 13V17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="tool-name">AI论文查重</div>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M7 7L17 17M7 17L17 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="tool-name">AI修改</div>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M7 6V8M17 6V8M7 12V14M17 12V14M7 18V20M17 18V20M3 8H21M3 16H21" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="tool-name">AI格式优化</div>
+                    </div>
+                </div>
+                
+                <button class="upload-button">上传检测报告</button>
+            </div>
+        </div>
+
+        <!-- 阶段四：答辩与定稿阶段 -->
+        <div class="stage">
+            <div class="stage-header">
+                <div class="stage-title">
+                    <span class="check-icon">✓</span>
+                    阶段四：答辩与定稿阶段
+                </div>
+                <div class="stage-time">
+                    2026.06.01 - 2026.06.30
+                </div>
+            </div>
+            
+            <div class="stage-content">
+                <div class="tools-container">
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16 4H19C19.5304 4 20.0391 4.21071 20.4142 4.58579C20.7893 4.96086 21 5.46957 21 6V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V6C3 5.46957 3.21071 4.96086 3.58579 4.58579C3.96086 4.21071 4.46957 4 5 4H8M8 4V6M8 4H16M8 4V6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="tool-name">AI答辩PPT</div>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 9V11M12 15V15.01M8 12H16M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="tool-name">AI答辩稿</div>
+                    </div>
+                </div>
+                
+                <button class="upload-button">上传答辩PPT</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 页面加载时获取项目信息
+        document.addEventListener('DOMContentLoaded', function() {
+            // 优先从全局变量获取项目信息，如果不存在则从localStorage获取
+            let projectName = window.globalProjectName || localStorage.getItem('projectName') || '我的论文项目';
+            let major = window.globalMajor || localStorage.getItem('major') || '科学';
+            let education = window.globalEducation || localStorage.getItem('education') || '本科';
+            
+            // 更新全局变量，确保一致性
+            window.globalProjectName = projectName;
+            window.globalMajor = major;
+            window.globalEducation = education;
+            
+            // 显示项目名称
+            const projectNameElement = document.getElementById('display-project-name');
+            if (projectNameElement) {
+                projectNameElement.textContent = projectName;
+            }
+            
+            // 给所有工具卡片添加点击事件
+            const toolCards = document.querySelectorAll('.tool-card');
+            toolCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // 这里可以添加工具的具体功能逻辑
+                    alert(`正在加载${this.querySelector('.tool-name').textContent}工具`);
+                });
+            });
+            
+            // 给上传按钮添加点击事件
+            const uploadButtons = document.querySelectorAll('.upload-button');
+            uploadButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // 判断按钮文本，如果是"上传选题"则跳转到选题页面
+                    if (this.textContent.trim() === '上传选题') {
+                        window.location.href = 'topic-selection.html';
+                    } else {
+                        // 其他上传按钮保持原功能
+                        alert('文件上传功能正在开发中');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

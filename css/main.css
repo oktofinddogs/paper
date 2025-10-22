@@ -74,6 +74,12 @@ body {
     margin-right: 10px;
 }
 
+/* Logo样式 */
+.logo-icon {
+    width: 122px;
+    height: 29px;
+}
+
 .logo h1 {
     font-size: 28px;
     color: #3498db;
