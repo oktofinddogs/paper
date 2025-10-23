@@ -114,16 +114,22 @@ document.addEventListener('DOMContentLoaded', function() {
     generateBtn.textContent = '生成中...';
     
     try {
-      // 调用API获取评估结果
-      const result = await chatWithDoubaoAppraise(topic, major, education);
+      // 回调函数处理流式内容块
+      const onChunkReceived = (partialContent) => {
+        // 更新结果显示
+        rightPanel.innerHTML = `<div style="padding: 20px; background: white; border-radius: 8px; min-height: 100%;">${formatResultForDisplay(partialContent)}</div>`;
+      };
+      
+      // 调用API获取评估结果（流式）
+      const finalResult = await chatWithDoubaoAppraise(topic, major, education, onChunkReceived);
       
       // 恢复按钮状态
       generateBtn.disabled = false;
       generateBtn.textContent = '生成评估';
       
-      // 显示评估结果
-      if (result) {
-        rightPanel.innerHTML = `<div style="padding: 20px; background: white; border-radius: 8px; min-height: 100%;">${formatResultForDisplay(result)}</div>`;
+      // 确保最终结果正确格式化
+      if (finalResult) {
+        rightPanel.innerHTML = `<div style="padding: 20px; background: white; border-radius: 8px; min-height: 100%;">${formatResultForDisplay(finalResult)}</div>`;
       } else {
         // 如果生成失败，显示错误信息
         rightPanel.innerHTML = `
@@ -146,8 +152,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
-  // 与API通信的函数
-  async function chatWithDoubaoAppraise(topic, major, education) {
+  // 与API通信的函数 - 支持流式响应
+  async function chatWithDoubaoAppraise(topic, major, education, onChunk) {
     try {
       // 构建请求体
       const requestBody = {
@@ -161,7 +167,8 @@ document.addEventListener('DOMContentLoaded', function() {
             role: 'user',
             content: `专业：${major}\n学历：${education === 'specialty' ? '专科' : education === 'undergraduate' ? '本科' : '研究生'}\n论文选题：${topic}\n请对该选题进行全面评估。`
           }
-        ]
+        ],
+        stream: true
       };
       
       // 使用fetch发送请求
@@ -174,8 +181,53 @@ document.addEventListener('DOMContentLoaded', function() {
         body: JSON.stringify(requestBody)
       });
       
-      const data = await response.json();
-      return data.choices[0].message.content;
+      if (!response.ok) {
+        throw new Error(`HTTP错误! 状态码: ${response.status}`);
+      }
+      
+      // 处理流式响应
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let fullContent = '';
+      
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) {
+          break;
+        }
+        
+        const chunk = decoder.decode(value, { stream: true });
+        
+        // 处理每个数据块（去除data:前缀和分隔符）
+        const lines = chunk.split('\n');
+        for (const line of lines) {
+          if (line.trim() === '' || line.trim() === 'data: [DONE]') {
+            continue;
+          }
+          
+          try {
+            // 去掉"data: "前缀
+            const cleanLine = line.startsWith('data: ') ? line.substring(5) : line;
+            const data = JSON.parse(cleanLine);
+            
+            // 提取内容并累积
+            if (data.choices && data.choices[0] && data.choices[0].delta && data.choices[0].delta.content) {
+              const contentChunk = data.choices[0].delta.content;
+              fullContent += contentChunk;
+              
+              // 调用回调函数处理部分内容
+              if (onChunk) {
+                onChunk(fullContent);
+              }
+            }
+          } catch (error) {
+            console.warn('解析流数据块时出错:', error);
+            // 继续处理其他块
+          }
+        }
+      }
+      
+      return fullContent;
     } catch (error) {
       console.error('API请求失败:', error);
       throw error;

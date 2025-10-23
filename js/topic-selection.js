@@ -82,12 +82,22 @@ async function handleGenerateClick() {
     resultContent.innerHTML = '<div class="loading">AI正在生成选题...</div>';
     
     try {
-        // 调用API生成选题
-        const result = await generateTopics(major, education, researchDirection);
+        // 创建一个容器来显示流式内容
+        const streamingContainer = document.createElement('div');
+        streamingContainer.className = 'streaming-content';
         
-        // 显示生成结果
-        if (result) {
-            resultContent.innerHTML = formatResultForDisplay(result);
+        // 回调函数处理流式内容块
+        const onChunkReceived = (partialContent) => {
+            // 更新结果显示
+            resultContent.innerHTML = formatResultForDisplay(partialContent);
+        };
+        
+        // 调用API生成选题（流式）
+        const finalResult = await generateTopics(major, education, researchDirection, onChunkReceived);
+        
+        // 确保最终结果正确格式化
+        if (finalResult) {
+            resultContent.innerHTML = formatResultForDisplay(finalResult);
         } else {
             resultContent.innerHTML = '<div class="error">生成失败，请稍后重试</div>';
         }
@@ -101,8 +111,8 @@ async function handleGenerateClick() {
     }
 }
 
-// 调用API生成选题
-async function generateTopics(major, education, researchDirection) {
+// 调用API生成选题 - 支持流式响应
+async function generateTopics(major, education, researchDirection, onChunk) {
     try {
         // 构建包含专业和学历信息的完整用户消息
         const fullUserMessage = `专业：${major}\n学历：${education}\n研究方向：${researchDirection}`;
@@ -169,7 +179,7 @@ async function generateTopics(major, education, researchDirection) {
                         content: fullUserMessage
                     }
                 ],
-                stream: false
+                stream: true
             })
         });
         
@@ -177,14 +187,49 @@ async function generateTopics(major, education, researchDirection) {
             throw new Error(`HTTP错误! 状态码: ${response.status}`);
         }
         
-        const data = await response.json();
+        // 处理流式响应
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let fullContent = '';
         
-        // 提取生成的内容
-        if (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) {
-            return data.choices[0].message.content;
-        } else {
-            throw new Error('API返回格式不正确');
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) {
+                break;
+            }
+            
+            const chunk = decoder.decode(value, { stream: true });
+            
+            // 处理每个数据块（去除data:前缀和分隔符）
+            const lines = chunk.split('\n');
+            for (const line of lines) {
+                if (line.trim() === '' || line.trim() === 'data: [DONE]') {
+                    continue;
+                }
+                
+                try {
+                    // 去掉"data: "前缀
+                    const cleanLine = line.startsWith('data: ') ? line.substring(5) : line;
+                    const data = JSON.parse(cleanLine);
+                    
+                    // 提取内容并累积
+                    if (data.choices && data.choices[0] && data.choices[0].delta && data.choices[0].delta.content) {
+                        const contentChunk = data.choices[0].delta.content;
+                        fullContent += contentChunk;
+                        
+                        // 调用回调函数处理部分内容
+                        if (onChunk) {
+                            onChunk(fullContent);
+                        }
+                    }
+                } catch (error) {
+                    console.warn('解析流数据块时出错:', error);
+                    // 继续处理其他块
+                }
+            }
         }
+        
+        return fullContent;
     } catch (error) {
         console.error('调用AI API失败:', error);
         throw error;

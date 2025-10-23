@@ -153,15 +153,28 @@ async function generateAppraisal() {
 从技术、数据、时间等多个角度分析，本研究具有良好的可行性。研究团队具备相关技术能力，数据来源可靠，时间安排合理。`;
         }
         
-        // 调用API获取评估结果
-        const result = await chatWithDoubaoAppraise(major, education, fileContent);
+        // 回调函数处理流式内容块
+        const onChunkReceived = (partialContent) => {
+            // 更新结果显示
+            const formattedResult = formatResultForDisplay(partialContent);
+            resultContainer.innerHTML = `
+                <div style="height: 100%; overflow-y: auto;">
+                    <div style="padding-right: 10px;">
+                        ${formattedResult}
+                    </div>
+                </div>
+            `;
+        };
         
-        // 格式化结果并显示
-        const formattedResult = formatResultForDisplay(result);
+        // 调用API获取评估结果（流式）
+        const finalResult = await chatWithDoubaoAppraise(major, education, fileContent, onChunkReceived);
+        
+        // 确保最终结果正确格式化
+        const formattedFinalResult = formatResultForDisplay(finalResult);
         resultContainer.innerHTML = `
             <div style="height: 100%; overflow-y: auto;">
                 <div style="padding-right: 10px;">
-                    ${formattedResult}
+                    ${formattedFinalResult}
                 </div>
             </div>
         `;
@@ -180,8 +193,8 @@ async function generateAppraisal() {
     }
 }
 
-// 调用豆包API生成评估报告
-async function chatWithDoubaoAppraise(major, education, proposalContent) {
+// 调用豆包API生成评估报告 - 支持流式响应
+async function chatWithDoubaoAppraise(major, education, proposalContent, onChunk) {
     // 构建请求体
     const requestBody = {
         model: ENDPOINT_ID,
@@ -211,7 +224,8 @@ async function chatWithDoubaoAppraise(major, education, proposalContent) {
                 请对这份开题报告进行专业评估。
                 `
             }
-        ]
+        ],
+        stream: true
     };
     
     try {
@@ -240,9 +254,49 @@ async function chatWithDoubaoAppraise(major, education, proposalContent) {
             throw new Error(`HTTP错误! 状态: ${response.status}, 详情: ${errorText}`);
         }
         
-        const data = await response.json();
-        console.log('fetch响应数据结构:', Object.keys(data));
-        return data.choices[0].message.content;
+        // 处理流式响应
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let fullContent = '';
+        
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) {
+                break;
+            }
+            
+            const chunk = decoder.decode(value, { stream: true });
+            
+            // 处理每个数据块（去除data:前缀和\n分隔符）
+            const lines = chunk.split('\n');
+            for (const line of lines) {
+                if (line.trim() === '' || line.trim() === 'data: [DONE]') {
+                    continue;
+                }
+                
+                try {
+                    // 去掉"data: "前缀
+                    const cleanLine = line.startsWith('data: ') ? line.substring(5) : line;
+                    const data = JSON.parse(cleanLine);
+                    
+                    // 提取内容并累积
+                    if (data.choices && data.choices[0] && data.choices[0].delta && data.choices[0].delta.content) {
+                        const contentChunk = data.choices[0].delta.content;
+                        fullContent += contentChunk;
+                        
+                        // 调用回调函数处理部分内容
+                        if (onChunk) {
+                            onChunk(fullContent);
+                        }
+                    }
+                } catch (error) {
+                    console.warn('解析流数据块时出错:', error);
+                    // 继续处理其他块
+                }
+            }
+        }
+        
+        return fullContent;
     } catch (error) {
         console.error('API调用失败详情:', {
             message: error.message,

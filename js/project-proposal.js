@@ -73,11 +73,24 @@ async function generateProposal() {
     showLoadingState();
     
     try {
-        // 调用API获取结果
-        const result = await chatWithDoubaoProposal(major, education, topic);
+        // 回调函数处理流式内容块
+        const onChunkReceived = (partialContent) => {
+            // 更新结果显示
+            const formattedResult = formatResultForDisplay(partialContent);
+            resultContainer.innerHTML = `
+                <div style="height: 100%; overflow-y: auto;">
+                    <div style="padding-right: 10px;">
+                        ${formattedResult}
+                    </div>
+                </div>
+            `;
+        };
         
-        // 格式化结果并显示
-        const formattedResult = formatResultForDisplay(result);
+        // 调用API获取结果（流式）
+        const finalResult = await chatWithDoubaoProposal(major, education, topic, onChunkReceived);
+        
+        // 确保最终结果正确格式化
+        const formattedResult = formatResultForDisplay(finalResult);
         resultContainer.innerHTML = `
             <div style="height: 100%; overflow-y: auto;">
                 <div style="padding-right: 10px;">
@@ -100,8 +113,8 @@ async function generateProposal() {
     }
 }
 
-// 调用豆包API生成开题报告
-async function chatWithDoubaoProposal(major, education, topic) {
+// 调用豆包API生成开题报告 - 支持流式响应
+async function chatWithDoubaoProposal(major, education, topic, onChunk) {
     // 构建请求体
     const requestBody = {
         model: ENDPOINT_ID,
@@ -131,7 +144,8 @@ async function chatWithDoubaoProposal(major, education, topic) {
                 请为我生成一份符合上述条件的开题报告。
                 `
             }
-        ]
+        ],
+        stream: true
     };
     
     try {
@@ -160,9 +174,49 @@ async function chatWithDoubaoProposal(major, education, topic) {
             throw new Error(`HTTP错误! 状态: ${response.status}, 详情: ${errorText}`);
         }
         
-        const data = await response.json();
-        console.log('fetch响应数据结构:', Object.keys(data));
-        return data.choices[0].message.content;
+        // 处理流式响应
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let fullContent = '';
+        
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) {
+                break;
+            }
+            
+            const chunk = decoder.decode(value, { stream: true });
+            
+            // 处理每个数据块（去除data:前缀和分隔符）
+            const lines = chunk.split('\n');
+            for (const line of lines) {
+                if (line.trim() === '' || line.trim() === 'data: [DONE]') {
+                    continue;
+                }
+                
+                try {
+                    // 去掉"data: "前缀
+                    const cleanLine = line.startsWith('data: ') ? line.substring(5) : line;
+                    const data = JSON.parse(cleanLine);
+                    
+                    // 提取内容并累积
+                    if (data.choices && data.choices[0] && data.choices[0].delta && data.choices[0].delta.content) {
+                        const contentChunk = data.choices[0].delta.content;
+                        fullContent += contentChunk;
+                        
+                        // 调用回调函数处理部分内容
+                        if (onChunk) {
+                            onChunk(fullContent);
+                        }
+                    }
+                } catch (error) {
+                    console.warn('解析流数据块时出错:', error);
+                    // 继续处理其他块
+                }
+            }
+        }
+        
+        return fullContent;
     } catch (error) {
         console.error('API调用失败详情:', {
             message: error.message,
@@ -186,7 +240,7 @@ async function chatWithDoubaoProposal(major, education, topic) {
         
         // 模拟生成成功的响应，用于演示
         console.log('API调用失败，使用模拟数据进行演示');
-        return `# 开题报告演示内容
+        const mockContent = `# 开题报告演示内容
 
 ## 研究背景与意义
 
@@ -221,6 +275,22 @@ async function chatWithDoubaoProposal(major, education, topic) {
 ## 预期成果
 
 完成高质量的研究论文一篇，并形成相关研究报告，为${topic}领域的理论研究和实践应用提供参考。`;
+        
+        // 如果有回调函数，模拟流式返回
+        if (onChunk) {
+            const lines = mockContent.split('\n');
+            let accumulated = '';
+            
+            // 模拟逐行流式输出
+            for (const line of lines) {
+                accumulated += line + '\n';
+                // 模拟网络延迟
+                await new Promise(resolve => setTimeout(resolve, Math.random() * 50));
+                onChunk(accumulated);
+            }
+        }
+        
+        return mockContent;
         
         // 实际环境中应抛出错误
         // throw new Error(errorMessage);
