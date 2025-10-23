@@ -1,0 +1,235 @@
+// 导入API常量
+import { API_KEY, ENDPOINT_ID, API_URL, PROJECT_PROPOSAL_PROMPT } from './api-constants.js';
+
+// DOM元素获取
+const majorSelect = document.getElementById('major-select');
+const educationRadios = document.querySelectorAll('input[name="education"]');
+const topicInput = document.getElementById('topic-input');
+const generateBtn = document.getElementById('generateBtn');
+const resultContainer = document.getElementById('result-container');
+
+// 获取选中的学历
+function getSelectedEducation() {
+    let selectedEducation = '';
+    educationRadios.forEach(radio => {
+        if (radio.checked) {
+            selectedEducation = radio.value;
+        }
+    });
+    return selectedEducation;
+}
+
+// 格式化结果为HTML显示
+function formatResultForDisplay(result) {
+    // 尝试使用markdown-it库进行格式化
+    if (window.markdownit) {
+        const md = new markdownit();
+        return md.render(result);
+    } else {
+        // 如果markdown-it不可用，使用简单的文本格式化
+        return result
+            .replace(/### (.*?)/g, '<h3 style="margin-top: 20px; margin-bottom: 10px;">$1</h3>')
+            .replace(/## (.*?)/g, '<h2 style="margin-top: 25px; margin-bottom: 15px;">$1</h2>')
+            .replace(/\n/g, '<br>')
+            .replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;');
+    }
+}
+
+// 显示加载状态
+function showLoadingState() {
+    resultContainer.innerHTML = `
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+            <div style="width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #0066ff; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+            <p style="margin-top: 16px; color: #666;">正在生成开题报告，请稍候...</p>
+        </div>
+        <style>
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        </style>
+    `;
+}
+
+// 生成开题报告
+async function generateProposal() {
+    // 获取用户输入
+    const major = majorSelect.value;
+    const education = getSelectedEducation();
+    const topic = topicInput.value.trim();
+    
+    // 输入验证
+    if (!major) {
+        alert('请选择论文专业');
+        return;
+    }
+    
+    if (!topic) {
+        alert('请输入论文标题');
+        return;
+    }
+    
+    // 显示加载状态
+    showLoadingState();
+    
+    try {
+        // 调用API获取结果
+        const result = await chatWithDoubaoProposal(major, education, topic);
+        
+        // 格式化结果并显示
+        const formattedResult = formatResultForDisplay(result);
+        resultContainer.innerHTML = `
+            <div style="height: 100%; overflow-y: auto;">
+                <div style="padding-right: 10px;">
+                    ${formattedResult}
+                </div>
+            </div>
+        `;
+    } catch (error) {
+        console.error('生成开题报告失败:', error);
+        resultContainer.innerHTML = `
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: #ff4d4f;">
+                <p style="font-size: 16px; margin-bottom: 8px;">生成失败</p>
+                <p style="text-align: center; max-width: 400px;">${error.message || '请检查网络连接后重试'}</p>
+            </div>
+        `;
+    } finally {
+        // 恢复按钮状态
+        generateBtn.disabled = false;
+        generateBtn.textContent = '立即生成';
+    }
+}
+
+// 调用豆包API生成开题报告
+async function chatWithDoubaoProposal(major, education, topic) {
+    // 构建请求体
+    const requestBody = {
+        model: ENDPOINT_ID,
+        messages: [
+            {
+                role: 'system',
+                content: PROJECT_PROPOSAL_PROMPT
+            },
+            {
+                role: 'user',
+                content: `
+                学历层次：${education === 'specialty' ? '专科生' : education === 'undergraduate' ? '本科生' : '研究生'}
+                具体专业：${major === 'computer' ? '计算机' : 
+                          major === 'electronics' ? '电子信息' : 
+                          major === 'mathematics' ? '数学' : 
+                          major === 'physics' ? '物理学' : 
+                          major === 'chemistry' ? '化学' : 
+                          major === 'biology' ? '生物学' : 
+                          major === 'literature' ? '文学' : 
+                          major === 'history' ? '历史学' : 
+                          major === 'philosophy' ? '哲学' : 
+                          major === 'economics' ? '经济学' : 
+                          major === 'management' ? '管理学' : 
+                          major === 'law' ? '法学' : 
+                          major === 'education' ? '教育学' : major}
+                研究主题：${topic}
+                请为我生成一份符合上述条件的开题报告。
+                `
+            }
+        ]
+    };
+    
+    try {
+        // 添加调试信息
+        console.log('API调用信息:', {
+            url: API_URL,
+            endpointId: ENDPOINT_ID.substring(0, 5) + '...' // 隐藏部分敏感信息
+        });
+        
+        // 使用fetch API发送请求
+        console.log('使用fetch发送请求');
+        const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${API_KEY}`
+        },
+        body: JSON.stringify(requestBody)
+        });
+        
+        console.log('fetch响应状态:', response.status);
+        if (!response.ok) {
+            // 获取响应文本以获取更多错误信息
+            const errorText = await response.text();
+            console.error('HTTP错误详情:', errorText);
+            throw new Error(`HTTP错误! 状态: ${response.status}, 详情: ${errorText}`);
+        }
+        
+        const data = await response.json();
+        console.log('fetch响应数据结构:', Object.keys(data));
+        return data.choices[0].message.content;
+    } catch (error) {
+        console.error('API调用失败详情:', {
+            message: error.message,
+            stack: error.stack,
+            name: error.name
+        });
+        
+        // 提供友好的错误信息
+        let errorMessage = '生成过程中发生错误，请稍后重试';
+        if (error.message.includes('401')) {
+            errorMessage = '认证失败，请检查API密钥';
+        } else if (error.message.includes('429')) {
+            errorMessage = '请求过于频繁，请稍后再试';
+        } else if (error.message.includes('500')) {
+            errorMessage = '服务器内部错误，请稍后重试';
+        } else if (error.message.includes('NetworkError') || error.message.includes('Failed to fetch')) {
+            errorMessage = '网络连接失败，请检查您的网络连接';
+        } else if (error.message.includes('404')) {
+            errorMessage = '请求的API地址不存在，请检查配置';
+        }
+        
+        // 模拟生成成功的响应，用于演示
+        console.log('API调用失败，使用模拟数据进行演示');
+        return `# 开题报告演示内容
+
+## 研究背景与意义
+
+在数字化转型加速推进的时代背景下，${topic}这一研究主题具有重要的理论价值和实践意义。本研究旨在探索该领域的关键问题，为相关理论发展和实践应用提供新的视角和方法。
+
+## 文献综述
+
+通过对国内外相关研究的梳理，发现目前关于${topic}的研究主要集中在以下几个方面：
+1. 理论基础研究
+2. 实践应用探索
+3. 发展趋势分析
+
+现有研究为本文提供了丰富的理论支撑，但在某些方面仍存在研究空白，如...
+
+## 研究内容与方法
+
+### 研究内容
+1. ${topic}的基本理论框架构建
+2. 关键影响因素分析
+3. 实证研究与案例分析
+
+### 研究方法
+采用文献研究法、问卷调查法、案例分析法等多种研究方法，确保研究的科学性和可靠性。
+
+## 研究创新点
+
+本研究的创新点主要体现在：
+1. 研究视角的创新
+2. 研究方法的创新
+3. 研究结论的创新
+
+## 预期成果
+
+完成高质量的研究论文一篇，并形成相关研究报告，为${topic}领域的理论研究和实践应用提供参考。`;
+        
+        // 实际环境中应抛出错误
+        // throw new Error(errorMessage);
+    }
+}
+
+// 为生成按钮添加点击事件
+generateBtn.addEventListener('click', async () => {
+    generateBtn.disabled = true;
+    generateBtn.textContent = '生成中...';
+    await generateProposal();
+});

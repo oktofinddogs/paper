@@ -164,31 +164,18 @@ document.addEventListener('DOMContentLoaded', function() {
         ]
       };
       
-      // 检查是否有axios库
-      if (window.axios) {
-        // 使用axios发送请求
-        const response = await window.axios.post(API_URL, requestBody, {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${API_KEY}`
-          }
-        });
-        
-        return response.data.choices[0].message.content;
-      } else {
-        // 使用fetch发送请求
-        const response = await fetch(API_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${API_KEY}`
-          },
-          body: JSON.stringify(requestBody)
-        });
-        
-        const data = await response.json();
-        return data.choices[0].message.content;
-      }
+      // 使用fetch发送请求
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${API_KEY}`
+        },
+        body: JSON.stringify(requestBody)
+      });
+      
+      const data = await response.json();
+      return data.choices[0].message.content;
     } catch (error) {
       console.error('API请求失败:', error);
       throw error;

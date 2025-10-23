@@ -45,59 +45,60 @@
         </main>
     </div>
 
+
+
+    
     <!-- 创建项目弹窗 -->
     <div id="project-modal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>创建我的论文项目</h2>
-                <button id="close-modal-btn" class="close-btn">&times;</button>
+                <h3>创建我的论文项目</h3>
+                <button id="close-modal-btn" class="close-btn">×</button>
             </div>
-            <form id="project-form">
-                <div class="modal-body">
+            <div class="modal-body">
+                <form id="project-form">
                     <div class="form-group">
-                        <label for="project-name">论文项目名称 <span style="color: #ef4444;">*</span></label>
-                        <input type="text" id="project-name" placeholder="请输入名称" required>
+                        <label for="project-name">项目名称</label>
+                        <input type="text" id="project-name" placeholder="请输入论文项目名称">
                     </div>
                     <div class="form-group">
-                        <label for="project-major">论文专业 <span style="color: #ef4444;">*</span></label>
-                        <select id="project-major" required>
+                        <label for="project-major">专业</label>
+                        <select id="project-major">
                             <option value="">请选择专业</option>
-                            <option value="电子信息">电子信息</option>
                             <option value="计算机科学">计算机科学</option>
                             <option value="软件工程">软件工程</option>
                             <option value="人工智能">人工智能</option>
-                            <option value="通信工程">通信工程</option>
-                            <option value="自动化">自动化</option>
+                            <option value="数据科学">数据科学</option>
+                            <option value="电子工程">电子工程</option>
                             <option value="其他">其他</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>选择学历 <span style="color: #ef4444;">*</span></label>
+                        <label>学历</label>
                         <div class="radio-group">
                             <label class="radio-label">
-                                <input type="radio" name="education" value="专科">
-                                <span>专科</span>
-                            </label>
-                            <label class="radio-label">
-                                <input type="radio" name="education" value="本科" checked>
+                                <input type="radio" name="education" value="本科">
                                 <span>本科</span>
                             </label>
                             <label class="radio-label">
-                                <input type="radio" name="education" value="研究生">
-                                <span>研究生</span>
+                                <input type="radio" name="education" value="硕士">
+                                <span>硕士</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="education" value="博士">
+                                <span>博士</span>
                             </label>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="cancel-create-project" class="cancel-btn">取消</button>
-                    <button type="submit" id="create-project-submit" class="submit-btn">确定</button>
-                </div>
-            </form>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="cancel-create-project" class="cancel-btn">取消</button>
+                <button type="submit" form="project-form" class="submit-btn">确定</button>
+            </div>
         </div>
     </div>
 
-    
     <script src="js/home.js"></script>
 </body>
 </html>

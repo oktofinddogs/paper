@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI开题报告评估</title>
+    <link rel="stylesheet" href="css/main.css">
+    <script>
+     var _hmt = _hmt || [];
+     (function() {
+       var hm = document.createElement("script");
+       hm.src = "https://hm.baidu.com/hm.js?e96eb58d2eae5768251e6ca734b6f227";
+       var s = document.getElementsByTagName("script")[0];
+       s.parentNode.insertBefore(hm, s);
+     })();
+    </script>
+    <style>
+        /* 头部样式 */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        /* 表单组样式 */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d0d0d0;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        select:focus {
+            outline: none;
+            border-color: #0066ff;
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .upload-button {
+            width: 100%;
+            padding: 12px;
+            background-color: #0066ff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        
+        .upload-button:hover {
+            background-color: #0052cc;
+        }
+        
+        .file-info {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #666;
+            word-break: break-all;
+        }
+        
+        .empty-state {
+            text-align: center;
+            color: #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+        
+        .footer-note {
+            font-size: 12px;
+            color: #999;
+            margin-top: 16px;
+            text-align: center;
+        }
+        
+        #file-input {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- 头部Logo -->
+        <div class="header">
+            <div class="logo">
+                <img src="assets/logo.png" alt="小吉论文" class="logo-icon">
+            </div>
+        </div>
+        
+        <!-- 内容包装器 - 两栏布局 -->
+        <div class="content-wrapper">
+            <!-- 左侧输入区域 -->
+            <div class="left-panel">
+                <h2 style="margin-bottom: 24px; color: #333; font-size: 18px;">AI开题报告评估</h2>
+                
+                <div class="form-group">
+                    <label>论文专业</label>
+                    <select id="major-select">
+                        <option value="">请选择专业</option>
+                        <option value="computer">计算机</option>
+                        <option value="electronics">电子信息</option>
+                        <option value="mathematics">数学</option>
+                        <option value="physics">物理学</option>
+                        <option value="chemistry">化学</option>
+                        <option value="biology">生物学</option>
+                        <option value="literature">文学</option>
+                        <option value="history">历史学</option>
+                        <option value="philosophy">哲学</option>
+                        <option value="economics">经济学</option>
+                        <option value="management">管理学</option>
+                        <option value="law">法学</option>
+                        <option value="education">教育学</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>选择学历</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="specialty" name="education" value="specialty">
+                            <label for="specialty">专科</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="undergraduate" name="education" value="undergraduate" checked>
+                            <label for="undergraduate">本科</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="postgraduate" name="education" value="postgraduate">
+                            <label for="postgraduate">研究生</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <input type="file" id="file-input" accept=".txt,.doc,.docx,.pdf">
+                    <button id="uploadBtn" class="upload-button">上传开题报告</button>
+                    <div id="file-info" class="file-info" style="display: none;"></div>
+                </div>
+                
+                <div class="footer-note">
+                    <p>AI生成的内容仅供用户参考，严禁用于学术作弊，使用时须遵守<br>学术诚信并验证信息准确性</p>
+                </div>
+            </div>
+
+            
+            <!-- 右侧生成区域 -->
+            <div class="right-panel">
+                <div id="result-container" class="empty-state">
+                    <p style="font-size: 16px;">内容生成区</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it@13.0.1/dist/markdown-it.min.js"></script>
+    <script type="module" src="js/proposal-appraise.js"></script>
+</body>
+</html>
