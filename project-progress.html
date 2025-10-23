@@ -27,6 +27,31 @@
             const weekColumns = document.querySelectorAll('.week-column');
             if (weekColumns.length === 0) return;
             
+            // 计算过去最近的一个周一的日期
+            function getLastMonday() {
+                const today = new Date();
+                const day = today.getDay();
+                // 如果今天是周日(0)，则减去6天；如果是周一(1)，则减去0天；其他情况减去(day-1)天
+                const diff = today.getDate() - (day === 0 ? 6 : day - 1);
+                const lastMonday = new Date(today.setDate(diff));
+                return lastMonday;
+            }
+            
+            // 格式化日期为24Oct这样的格式
+            function formatDate(date) {
+                const day = date.getDate();
+                const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                const month = monthNames[date.getMonth()];
+                return `${day}${month}`;
+            }
+            
+            // 获取过去最近的周一
+            const lastMonday = getLastMonday();
+            // 跟踪当前处理的周一日期
+            let currentMonday = new Date(lastMonday);
+            // 跟踪已处理的周一数量
+            let mondayCount = 0;
+            
             // 为每个星期列添加刻度，确保每个星期文本都有对应的刻度线
             weekColumns.forEach((column, index) => {
                 const weekDayElement = column.querySelector('.week-day');
@@ -59,6 +84,24 @@
                 
                 // 添加到日历线
                 calendarLine.appendChild(scale);
+                
+                // 如果是周一，添加日期显示
+                if (isMonday) {
+                    // 为第一个周一显示过去最近的周一日期，后续每个周一递增7天
+                    const displayDate = formatDate(currentMonday);
+                    
+                    // 创建日期元素
+                    const dateElement = document.createElement('div');
+                    dateElement.classList.add('week-date');
+                    dateElement.textContent = displayDate;
+                    
+                    // 添加到week-column
+                    column.appendChild(dateElement);
+                    
+                    // 递增到下一个周一
+                    currentMonday.setDate(currentMonday.getDate() + 7);
+                    mondayCount++;
+                }
             });
         });
     </script>
@@ -191,9 +234,10 @@
         .calendar-nav {
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 15px;
+            justify-content: space-between;
+            width: 100%;
+            padding-left: 7.5px;
+            padding-right: 7.5px;
         }
         
         .calendar-nav button {
@@ -251,20 +295,19 @@
             flex-direction: column;
             align-items: center;
             position: relative;
-            padding-left: 7.5px;
-            padding-right: 7.5px;
+            /* 移除左右padding，确保所有列宽度一致 */
+            min-height: 60px; /* 确保足够的垂直空间 */
         }
         
         .week-day {
             font-size: 10px;
             color: #666;
-            margin-top: 40px;
             text-align: center;
             z-index: 1;
             width: auto;
-            position: relative;
-            left: 50%;
-            transform: translateX(-50%);
+            margin-top: 35px; /* 确保所有星期文本(M、T、W、T等)与时间轴顶部距离一致 */
+            margin-bottom: 0; /* 确保一致的底部边距 */
+            padding: 0; /* 移除内边距 */
         }
         
         .week-date {
@@ -272,16 +315,27 @@
             color: #999;
             margin-top: 3px;
             text-align: center;
+            position: relative;
+            top: 0; /* 确保日期文本不影响星期文本的垂直位置 */
+            padding: 0;
         }
         
         .calendar-line {
             position: absolute;
-            top: 25px;
+            top: 30px;
             left: 0;
             right: 0;
             height: 2px;
             background-color: #e0e0e0;
             z-index: 0;
+        }
+        
+        /* 调整.week-column使其内容垂直居中 */
+        .calendar-weeks {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+            align-items: center;
         }
         
         
@@ -527,7 +581,7 @@
             <!-- 第一行：左右尖括号导航 -->
             <div class="calendar-nav">
                 <button id="prev-month">&lt;</button>
-                <span class="current-date" id="current-date">today, 26 Oct</span>
+                
                 <button id="next-month">&gt;</button>
             </div>
             
