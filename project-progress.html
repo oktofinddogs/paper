@@ -138,6 +138,12 @@
             object-fit: contain;
         }
         
+        .content-wrapper {
+            flex: 1;
+            height: 100vh;
+            display: flex;
+        }
+        
         .sidebar {
             width: 80px;
             background-color: #ffffff;
@@ -149,6 +155,7 @@
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
             border-right: 1px solid #e0e0e0;
             margin-top: 0;
+            flex-shrink: 0;
         }
         
         .sidebar-item {
@@ -165,20 +172,16 @@
             transform: translateX(5px);
         }
         
-        .sidebar-item.active {
-            background-color: #00CFC8;
-        }
-        
-        .sidebar-item.active .sidebar-icon {
-            color: white;
-            opacity: 1;
-        }
         
         .sidebar-icon {
-            font-size: 18px;
+            width: 24px;
+            height: 24px;
             margin-bottom: 5px;
-            color: #666666;
-            opacity: 0.8;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            font-size: 0;
+            color: transparent;
         }
         
         .sidebar-text {
@@ -186,17 +189,18 @@
             white-space: nowrap;
         }
         
-        .content-wrapper {
+        .main-content {
             flex: 1;
-            min-height: 0;
+            min-width: 0;
+            overflow: hidden;
         }
         
-        
         .app-container {
-            max-width: 1200px;
-            margin: 0 0 0 0;
-            padding: 0 20px;
+            margin: 0;
+            padding: 0 0px;
             width: 100%;
+            height: 100%;
+            overflow: auto;
         }
         
         /* 论文信息头部 */
@@ -387,21 +391,20 @@
         /* 阶段进度 */
         .progress-section {
             background-color: transparent;
-            padding: 25px 30px;
+            padding: 25px 0px;
             overflow-x: auto;
         }
         
         .progress-stages {
             display: flex;
-            gap: 20px;
+            gap: 10px;
             margin-bottom: 30px;
             flex-wrap: nowrap;
         }
         
         .stage {
-            min-width: 240px;
+            min-width: 300px;
             background-color: transparent;
-            padding: 15px;
         }
         
         .stage-purple {
@@ -455,10 +458,7 @@
             align-items: flex-start;
         }
         
-        .stage {
-            margin-right: 20px;
-        }
-        
+              
         .stage-items {
             margin-top: 15px;
         }
@@ -468,8 +468,28 @@
             margin-bottom: 10px;
             background-color: white;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
+        
+        .item-tools {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .item-tools .tool-btn {
+    flex: 0 0 calc((100% - 10px) / 2);
+    max-width: calc((100% - 10px) / 2);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    padding-left: 10px;
+    color: transparent;
+    font-size: 0;
+    text-indent: -9999px;
+}
+        
+
         
         .stage-item-header {
             display: flex;
@@ -524,7 +544,6 @@
         
         .tool-btn {
             padding: 6px 12px;
-            border: 1px solid #ddd;
             border-radius: 6px;
             background-color: white;
             cursor: pointer;
@@ -548,7 +567,7 @@
     <div class="content-wrapper">
         <!-- 侧边栏 -->
         <div class="sidebar">
-            <div class="sidebar-item active">
+            <div class="sidebar-item">
                 <div class="sidebar-icon">📋</div>
                 <div class="sidebar-text">项目</div>
             </div>
@@ -568,6 +587,7 @@
         
         <!-- 主内容区域 -->
         
+        <div class="main-content">
         <div class="app-container">
         <!-- 论文信息头部 -->
         <div class="project-header">
@@ -703,6 +723,10 @@
                                 <div class="item-status">已完成</div>
                             </div>
                             <div class="item-desc">2025.10.01~2025.10.31</div>
+                            <div class="item-features">基于研究方法选题 | 真实参考文献 | 专业选题评估分析报告</div>
+                            <div class="progress-container">
+                                <div class="progress-bar completed" style="width: 100%"></div>
+                            </div>
                             <div class="item-tools">
                                 <button class="tool-btn" onclick="window.location.href='topic-selection.html'">AI选题</button>
                                 <button class="tool-btn" onclick="window.location.href='topic-appraise.html'">AI选题评估</button>
@@ -715,6 +739,10 @@
                                 <div class="item-status">进行中</div>
                             </div>
                             <div class="item-desc">2025.11.01~2025.11.30</div>
+                            <div class="item-features">真实参考文献 | 文献引用标注 | 免费生成大纲｜补充资料投喂AI</div>
+                            <div class="progress-container">
+                                <div class="progress-bar in-progress" style="width: 45%"></div>
+                            </div>
                             <div class="item-tools">
                                 <button class="tool-btn" onclick="window.location.href='project-proposal.html'">AI开题报告</button>
                                 <button class="tool-btn" onclick="window.location.href='proposal-appraise.html'">AI开题报告评估</button>
@@ -734,6 +762,10 @@
                                 <div class="item-status">未开始</div>
                             </div>
                             <div class="item-desc">2025.12.01~2026.04.30</div>
+                            <div class="item-features">真实参考文献 | 支持自定义文献｜文献引用标注 | 免费生成大纲｜补充资料投喂AI</div>
+                            <div class="progress-container">
+                                <div class="progress-bar not-started" style="width: 0%"></div>
+                            </div>
                             <div class="item-tools">
                                 <button class="tool-btn">AI论文写作</button>
                                 <button class="tool-btn">文献检索</button>
@@ -754,6 +786,10 @@
                                 <div class="item-status">未开始</div>
                             </div>
                             <div class="item-desc">2026.05.01~2026.05.12</div>
+                            <div class="item-features">精准度高 | 论文逐句分析｜文本检测｜可视化标注｜文档格式快捷调整</div>
+                            <div class="progress-container">
+                                <div class="progress-bar not-started" style="width: 0%"></div>
+                            </div>
                             <div class="item-tools">
                                 <button class="tool-btn">AI论文查重</button>
                                 <button class="tool-btn">AIGC检测</button>
@@ -767,6 +803,10 @@
                                 <div class="item-status">未开始</div>
                             </div>
                             <div class="item-desc">2026.05.13~2026.06.10</div>
+                            <div class="item-features">强力降重，疑似度降低50% 左右｜智能降重 | 轻、中、重度降重 | 报告内容一键复制</div>
+                            <div class="progress-container">
+                                <div class="progress-bar not-started" style="width: 0%"></div>
+                            </div>
                             <div class="item-tools">
                                 <button class="tool-btn">AI论文降重</button>
                                 <button class="tool-btn">AIGC降重</button>
@@ -786,6 +826,10 @@
                                 <div class="item-status">未开始</div>
                             </div>
                             <div class="item-desc">2026.06.10~2026.06.30</div>
+                            <div class="item-features">与论文高度贴合 | 可选择PPT页数 | 提供答辩稿、答辩问答增值服务</div>
+                            <div class="progress-container">
+                                <div class="progress-bar not-started" style="width: 0%"></div>
+                            </div>
                             <div class="item-tools">
                                 <button class="tool-btn">AI答辩PPT</button>
                                 <button class="tool-btn">AI模拟答辩</button>
@@ -796,7 +840,7 @@
             </div>
         </div>
         </div>
-    </div>
+        </div>
     </div>
 
     <script>
@@ -841,6 +885,215 @@
                     alert('切换到下个月');
                 });
             }
+            
+            // 为按钮设置背景图片
+            const toolButtons = document.querySelectorAll('.tool-btn');
+            toolButtons.forEach(button => {
+                const buttonText = button.textContent.trim();
+                // 检查assets目录是否有对应的图片文件
+                const imagePath = `assets/${buttonText}.png`;
+                // 创建一个图片对象来检测图片是否存在
+                const img = new Image();
+                img.onload = function() {
+                    // 图片存在,设置为按钮背景
+                    button.style.backgroundImage = `url('${imagePath}')`;
+                };
+                img.onerror = function() {
+                    // 图片不存在,不设置背景
+                    console.log(`未找到图片: ${imagePath}`);
+                };
+                img.src = imagePath;
+            });
+            
+            // 为侧边栏图标设置背景图片
+            const sidebarItems = document.querySelectorAll('.sidebar-item');
+            sidebarItems.forEach(item => {
+                const iconElement = item.querySelector('.sidebar-icon');
+                const textElement = item.querySelector('.sidebar-text');
+                if (iconElement && textElement) {
+                    const iconText = textElement.textContent.trim();
+                    const imagePath = `assets/${iconText}.png`;
+                    // 创建一个图片对象来检测图片是否存在
+                    const img = new Image();
+                    img.onload = function() {
+                        // 图片存在,设置为图标背景
+                        iconElement.style.backgroundImage = `url('${imagePath}')`;
+                    };
+                    img.onerror = function() {
+                        // 图片不存在,不设置背景
+                        console.log(`未找到侧边栏图片: ${imagePath}`);
+                    };
+                    img.src = imagePath;
+                }
+            });
+            
+            // 在时间轴上标注今天的位置
+            function markTodayOnTimeline() {
+                const today = new Date();
+                const dayOfWeek = today.getDay(); // 0=周日, 1=周一, ..., 6=周六
+                
+                // 计算最近的周一(过去的)
+                const daysFromMonday = (dayOfWeek === 0) ? 6 : (dayOfWeek - 1);
+                const lastMonday = new Date(today);
+                lastMonday.setDate(today.getDate() - daysFromMonday);
+                
+                // 计算今天距离最近周一的天数
+                const daysSinceMonday = Math.floor((today - lastMonday) / (1000 * 60 * 60 * 24));
+                
+                // 获取所有week-column元素
+                const weekColumns = document.querySelectorAll('.week-column');
+                
+                if (weekColumns.length > daysSinceMonday) {
+                    const targetColumn = weekColumns[daysSinceMonday];
+                    
+                    // 创建圆圈标记元素
+                    const todayMarker = document.createElement('div');
+                    todayMarker.style.position = 'absolute';
+                    todayMarker.style.top = '24px'; // 圆圈穿过时间轴，中心略高于轴线
+                    todayMarker.style.left = '50%';
+                    todayMarker.style.transform = 'translateX(-50%)';
+                    todayMarker.style.width = '6px';
+                    todayMarker.style.height = '6px';
+                    todayMarker.style.borderRadius = '50%';
+                    todayMarker.style.border = '1px solid #00CFC8';
+                    todayMarker.style.backgroundColor = 'transparent';
+                    todayMarker.style.zIndex = '5'; // 确保圆圈显示在时间轴线上方
+                    
+                    // 创建气泡弹框
+      const todayBubble = document.createElement('div');
+      const today = new Date();
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const dateStr = `${today.getDate()}${months[today.getMonth()]}`;
+      todayBubble.textContent = `today,${dateStr}`;
+                    todayBubble.style.position = 'absolute';
+      todayBubble.style.top = '-12px'; // 圆圈上方,非常接近圆圈
+                    todayBubble.style.left = '50%';
+                    todayBubble.style.transform = 'translateX(-50%)';
+                    todayBubble.style.backgroundColor = '#00CFC8';
+                    todayBubble.style.color = 'white';
+                    todayBubble.style.padding = '4px 8px';
+                    todayBubble.style.borderRadius = '4px';
+                    todayBubble.style.fontSize = '12px';
+                    todayBubble.style.whiteSpace = 'pre-line';
+                    todayBubble.style.textAlign = 'center';
+                    todayBubble.style.zIndex = '6';
+                    todayBubble.style.lineHeight = '1.4';
+                    
+                    // 将圆圈添加到对应的列中
+                    targetColumn.style.position = 'relative';
+                    targetColumn.appendChild(todayMarker);
+                    targetColumn.appendChild(todayBubble);
+                }
+            }
+            
+            // 添加时间节点气球标记
+            // daysOffset: 今天之后的天数偏移，默认为2
+            // customColor: 自定义气球颜色，如果不提供则根据日期自动判断阶段颜色
+            function addMilestoneBalloon(daysOffset = 2, customColor = null) {
+                const today = new Date();
+                const dayOfWeek = today.getDay(); // 0=周日, 1=周一, ..., 6=周六
+                
+                // 计算最近的周一(过去的)
+                const daysFromMonday = (dayOfWeek === 0) ? 6 : (dayOfWeek - 1);
+                const lastMonday = new Date(today);
+                lastMonday.setDate(today.getDate() - daysFromMonday);
+                
+                // 计算气球位置
+                const daysSinceMonday = Math.floor((today - lastMonday) / (1000 * 60 * 60 * 24));
+                const balloonDayIndex = daysSinceMonday + daysOffset;
+                
+                // 获取所有week-column元素
+                const weekColumns = document.querySelectorAll('.week-column');
+                
+                if (weekColumns.length > balloonDayIndex) {
+                    const targetColumn = weekColumns[balloonDayIndex];
+                    
+                    // 根据日期判断当前阶段并获取对应颜色
+                    let stageColor;
+                    if (customColor) {
+                        stageColor = customColor; // 使用自定义颜色
+                    } else {
+                        const balloonDate = new Date(today);
+                        balloonDate.setDate(today.getDate() + daysOffset);
+                        stageColor = '#9b59b6'; // 默认紫色(阶段一)
+                    
+                        const balloonDateStr = balloonDate.toISOString().split('T')[0];
+                        // 阶段一：2025.10.01~2025.11.30 - 紫色
+                        if (balloonDateStr >= '2025-10-01' && balloonDateStr <= '2025-11-30') {
+                            stageColor = '#9b59b6';
+                        }
+                        // 阶段二：2025.12.01~2026.04.30 - 蓝色
+                        else if (balloonDateStr >= '2025-12-01' && balloonDateStr <= '2026-04-30') {
+                            stageColor = '#3498db';
+                        }
+                        // 阶段三：2026.05.01~2026.06.10 - 绿色
+                        else if (balloonDateStr >= '2026-05-01' && balloonDateStr <= '2026-06-10') {
+                            stageColor = '#2ecc71';
+                        }
+                        // 阶段四：2026.06.10~2026.06.30 - 橙色
+                        else if (balloonDateStr >= '2026-06-10' && balloonDateStr <= '2026-06-30') {
+                            stageColor = '#e67e22';
+                        }
+                    }
+                    
+                    // 创建气球容器
+                    const balloonContainer = document.createElement('div');
+                    balloonContainer.style.position = 'absolute';
+                    balloonContainer.style.top = '-20px'; // 气球在时间轴上方,靠近连接线
+                    balloonContainer.style.left = '50%';
+                    balloonContainer.style.transform = 'translateX(-50%)';
+                    balloonContainer.style.zIndex = '7';
+                    
+                    // 创建气球主体
+                    const balloon = document.createElement('div');
+                    balloon.style.width = '16px'; // 缩小气球宽度
+                    balloon.style.height = '20px'; // 缩小气球高度
+                    balloon.style.backgroundColor = stageColor;
+                    balloon.style.borderRadius = '50% 50% 50% 50% / 60% 60% 40% 40%'; // 气球形状
+                    balloon.style.position = 'relative';
+                    balloon.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+                    
+                    // 创建气球底部的小三角(绳结)
+                    const balloonTail = document.createElement('div');
+                    balloonTail.style.position = 'absolute';
+                    balloonTail.style.bottom = '-4px';
+                    balloonTail.style.left = '50%';
+                    balloonTail.style.transform = 'translateX(-50%)';
+                    balloonTail.style.width = '0';
+                    balloonTail.style.height = '0';
+                    balloonTail.style.borderLeft = '3px solid transparent';
+                    balloonTail.style.borderRight = '3px solid transparent';
+                    balloonTail.style.borderTop = `4px solid ${stageColor}`;
+                    
+                    // 创建绳子
+                    const balloonString = document.createElement('div');
+                    balloonString.style.position = 'absolute';
+                    balloonString.style.top = '30px'; // 从时间轴位置开始
+                    balloonString.style.left = '50%';
+                    balloonString.style.transform = 'translateX(-50%)';
+                    balloonString.style.width = '1px';
+                    balloonString.style.height = '15px'; // 调整绳子长度
+                    balloonString.style.backgroundColor = '#999';
+                    
+                    // 组装气球
+                    balloon.appendChild(balloonTail);
+                    balloonContainer.appendChild(balloon);
+                    balloonContainer.appendChild(balloonString);
+                    
+                    // 将气球添加到对应的列中
+                    targetColumn.style.position = 'relative';
+                    targetColumn.appendChild(balloonContainer);
+                }
+            }
+            
+            // 页面加载完成后标注今天的位置
+            markTodayOnTimeline();
+            
+            // 添加时间节点气球标记
+            addMilestoneBalloon();
+            
+            // 添加阶段二的蓝色气球标记
+            addMilestoneBalloon(8, '#3498db'); // 阶段二位置，蓝色
         });
     </script>
 </body>

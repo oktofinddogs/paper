@@ -286,6 +286,24 @@ body {
     width: 100%;
 }
 
+/* 工具按钮样式 */
+.tool-btn {
+    flex: 1;
+    height: 80px;
+    background-color: transparent;
+    border: none;
+    border-radius: 16px;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+    transition: background-color 0.3s ease;
+}
+
+.tool-btn:hover {
+    background-color: #E6F2FF;
+}
+
 .generate-button:hover {
     background-color: #2980b9;
 }
@@ -388,7 +406,41 @@ body {
     text-align: center;
 }
 
+/* 项目特征样式 */
+.item-features {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+}
 
+/* 进度条容器样式 */
+.progress-container {
+    height: 6px;
+    background-color: #e0e0e0;
+    border-radius: 3px;
+    margin-top: 8px;
+    overflow: hidden;
+}
+
+/* 进度条填充样式 */
+.progress-bar {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+/* 不同状态的进度条颜色 */
+.progress-bar.completed {
+    background-color: #28a745;
+}
+
+.progress-bar.in-progress {
+    background-color: #007bff;
+}
+
+.progress-bar.not-started {
+    background-color: #6c757d;
+}
 
 /* 响应式设计 */
 @media (max-width: 768px) {
