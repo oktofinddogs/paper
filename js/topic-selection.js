@@ -1,7 +1,5 @@
-// 定义API相关常量
-const API_KEY = 'bd747896-e89b-46f4-a5ab-0a232d086845';
-const ENDPOINT_ID = 'ep-20251015101857-wc8xz';
-const API_URL = 'https://ark.cn-beijing.volces.com/api/v3/chat/completions';
+// 从API常量文件导入所需常量
+import { API_KEY, ENDPOINT_ID, API_URL } from './api-constants.js';
 
 // 读取文件内容的函数
 function readFileContent(file) {
