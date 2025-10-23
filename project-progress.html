@@ -77,6 +77,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            justify-content: flex-start;
         }
         
         /* Logo样式 */
@@ -101,7 +102,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px 0;
+            padding: 20px 10px;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
             border-right: 1px solid #e0e0e0;
             margin-top: 0;
@@ -143,19 +144,10 @@
         }
         
         .content-wrapper {
-            display: flex;
             flex: 1;
             min-height: 0;
-            gap: 50px;
         }
         
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow-x: auto;
-            margin-top: 0;
-        }
         
         .app-container {
             max-width: 1200px;
@@ -174,7 +166,7 @@
         .project-info {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: flex-start;
             margin-bottom: 15px;
         }
         
@@ -182,6 +174,7 @@
             font-size: 22px;
             font-weight: 600;
             color: #2c3e50;
+            margin-right: 5px;
         }
         
         .project-meta {
@@ -520,13 +513,12 @@
         </div>
         
         <!-- 主内容区域 -->
-        <div class="main-content">
+        
         <div class="app-container">
         <!-- 论文信息头部 -->
         <div class="project-header">
             <div class="project-info">
-                <h1 class="project-title" id="display-project-name">我的论文项目</h1>
-                <div class="project-meta" id="display-major-education">计算机专业 · 本科</div>
+                <h1 class="project-title" id="display-project-name">我的论文项目</h1><span style="margin: 0 8px; color: #aaa; align-self: center;">|</span><div class="project-meta" id="display-major-education">计算机专业 · 本科</div>
             </div>
         </div>
         
@@ -778,13 +770,6 @@
                 majorEducationElement.textContent = `${major}专业 · ${education}`;
             }
             
-            // 工具按钮点击事件
-            const toolButtons = document.querySelectorAll('.tool-btn');
-            toolButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    alert(`正在加载${this.textContent}工具`);
-                });
-            });
             
             // 日历导航按钮事件
             const prevMonthBtn = document.getElementById('prev-month');
