@@ -103,23 +103,25 @@ body {
 
 /* 英雄标题 */
 .hero-title {
-    font-size: 56px;
+    font-size: 50px;
     font-weight: 700;
     line-height: 1.2;
-    color: white;
     letter-spacing: -0.5px;
     position: relative;
     white-space: nowrap;
+    background: linear-gradient(to right, #00CFC8, #0062FF);
+    color: transparent;
+     -webkit-background-clip: text;
+    background-clip: text;
 }
 
 /* 副标题样式 */
 .hero-subtitle {
-    font-size: 36px;
-    background: linear-gradient(to right, #00CFC8, #0062FF);
+    font-size: 24px;
     -webkit-background-clip: text;
     background-clip: text;
-    color: transparent;
-    margin-bottom: 40px;
+    color: #FFFFFFCC;
+    margin-bottom: 80px;
     font-weight: 500;
 }
 
