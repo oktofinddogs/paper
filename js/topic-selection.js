@@ -1,5 +1,5 @@
 // 从API常量文件导入所需常量
-import { API_KEY, ENDPOINT_ID, API_URL, TOPIC_APPRAISAL_PROMPT, PROJECT_PROPOSAL_PROMPT, PROJECT_PROPOSAL_EVALUATION_PROMPT, TOPIC_SELECTION_PROMPT } from './api-constants.js';
+import { API_KEY, ENDPOINT_ID, API_URL, TOPIC_APPRAISAL_PROMPT, PROJECT_PROPOSAL_PROMPT, PROJECT_PROPOSAL_EVALUATION_PROMPT, TOPIC_SELECTION_PROMPT, WRITE_PAPER_PROMPT } from './api-constants.js';
 
 // DOM元素
 let majorSelect;
@@ -72,12 +72,14 @@ function parseUrlParams() {
     if (promptName) {
         // 根据提示词名称选择对应的提示词
         if (promptName === 'PROJECT_PROPOSAL_PROMPT') {
-            currentPrompt = PROJECT_PROPOSAL_PROMPT;
-        } else if (promptName === 'PROJECT_PROPOSAL_EVALUATION_PROMPT') {
-            currentPrompt = PROJECT_PROPOSAL_EVALUATION_PROMPT;
-        } else if (promptName === 'TOPIC_SELECTION_PROMPT') {
-            currentPrompt = TOPIC_SELECTION_PROMPT;
-        } else {
+        currentPrompt = PROJECT_PROPOSAL_PROMPT;
+    } else if (promptName === 'PROJECT_PROPOSAL_EVALUATION_PROMPT') {
+        currentPrompt = PROJECT_PROPOSAL_EVALUATION_PROMPT;
+    } else if (promptName === 'WRITE_PAPER_PROMPT') {
+        currentPrompt = WRITE_PAPER_PROMPT;
+    } else if (promptName === 'TOPIC_SELECTION_PROMPT') {
+        currentPrompt = TOPIC_SELECTION_PROMPT;
+    } else {
             currentPrompt = TOPIC_SELECTION_PROMPT;
         }
         pageParams.promptName = promptName;
@@ -127,6 +129,19 @@ function initializePageFromParams() {
         const btnText = document.getElementById('btn-text');
         if (btnText) {
             btnText.textContent = '开始评估';
+        }
+    }
+    
+    // 如果是论文写作场景
+    if (pageParams.promptName === 'WRITE_PAPER_PROMPT') {
+        // 修改研究方向标签为"论文标题"
+        const researchLabel = document.querySelector('label[for="research-direction"]');
+        if (researchLabel) {
+            researchLabel.textContent = '论文标题';
+        }
+        // 修改研究方向输入框的占位符
+        if (researchDirectionTextarea) {
+            researchDirectionTextarea.placeholder = '请输入论文标题，例如：人工智能在医疗诊断中的应用研究';
         }
     }
     
