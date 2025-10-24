@@ -764,7 +764,7 @@
                                 <div class="progress-bar not-started" style="width: 0%"></div>
                             </div>
                             <div class="item-tools">
-                                <button class="tool-btn">AI论文写作</button>
+                                <button class="tool-btn" onclick="navigateToWritePaper()">AI论文写作</button>
                                 <button class="tool-btn">文献检索</button>
                                 <button class="tool-btn">AI文献综述</button>
                             </div>
@@ -1141,6 +1141,25 @@
             const params = new URLSearchParams();
             params.append('title', '开题报告评估');
             params.append('prompt', 'PROJECT_PROPOSAL_EVALUATION_PROMPT');
+            params.append('projectName', projectName);
+            params.append('major', major);
+            params.append('education', education);
+            
+            // 跳转到topic-selection.html并带上参数
+            window.location.href = `topic-selection.html?${params.toString()}`;
+        }
+        
+        // 跳转到AI论文写作页面并传递参数
+        function navigateToWritePaper() {
+            // 获取当前项目信息
+            const projectName = window.globalProjectName || localStorage.getItem('projectName') || '我的论文项目';
+            const major = window.globalMajor || localStorage.getItem('major') || '计算机';
+            const education = window.globalEducation || localStorage.getItem('education') || '本科';
+            
+            // 构建URL参数
+            const params = new URLSearchParams();
+            params.append('title', 'AI论文写作');
+            params.append('prompt', 'WRITE_PAPER_PROMPT');
             params.append('projectName', projectName);
             params.append('major', major);
             params.append('education', education);
