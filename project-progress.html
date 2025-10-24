@@ -741,7 +741,7 @@
                                 <div class="progress-bar in-progress" style="width: 45%"></div>
                             </div>
                             <div class="item-tools">
-                                <button class="tool-btn" onclick="window.location.href='project-proposal.html'">AI开题报告</button>
+                                <button class="tool-btn" onclick="navigateToProposal()">AI开题报告</button>
                                 <button class="tool-btn" onclick="window.location.href='proposal-appraise.html'">AI开题报告评估</button>
                             </div>
                         </div>
@@ -1110,6 +1110,25 @@
             // 添加阶段二的蓝色气球标记
             addMilestoneBalloon(8, '#3498db'); // 阶段二位置，蓝色
         });
+        
+        // 跳转到开题报告页面并传递参数
+        function navigateToProposal() {
+            // 获取当前项目信息
+            const projectName = window.globalProjectName || localStorage.getItem('projectName') || '我的论文项目';
+            const major = window.globalMajor || localStorage.getItem('major') || '计算机';
+            const education = window.globalEducation || localStorage.getItem('education') || '本科';
+            
+            // 构建URL参数
+            const params = new URLSearchParams();
+            params.append('title', '开题报告');
+            params.append('prompt', 'PROJECT_PROPOSAL_PROMPT');
+            params.append('projectName', projectName);
+            params.append('major', major);
+            params.append('education', education);
+            
+            // 跳转到topic-selection.html并带上参数
+            window.location.href = `topic-selection.html?${params.toString()}`;
+        }
     </script>
 </body>
 </html>
