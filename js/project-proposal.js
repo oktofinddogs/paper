@@ -19,21 +19,52 @@ function getSelectedEducation() {
     return selectedEducation;
 }
 
-// 格式化结果为HTML显示
-function formatResultForDisplay(result) {
-    // 尝试使用markdown-it库进行格式化
-    if (window.markdownit) {
-        const md = new markdownit();
-        return md.render(result);
-    } else {
-        // 如果markdown-it不可用，使用简单的文本格式化
-        return result
-            .replace(/### (.*?)/g, '<h3 style="margin-top: 20px; margin-bottom: 10px;">$1</h3>')
-            .replace(/## (.*?)/g, '<h2 style="margin-top: 25px; margin-bottom: 15px;">$1</h2>')
-            .replace(/\n/g, '<br>')
-            .replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;');
+ // 格式化AI返回的结果为HTML，支持Markdown格式
+  function formatResultForDisplay(text) {
+    try {
+      // 检查是否已加载markdown-it库
+      if (window.markdownit && text) {
+        console.log("有markdown库");
+        const md = window.markdownit();
+        return md.render(text);
+      }
+      
+      // 如果没有markdown-it库，使用简单的Markdown解析作为回退
+      let formattedText = text
+        // 标题处理
+        .replace(/^### (.*$)/gm, '<h3 style="margin-bottom: 15px; color: #333; font-size: 18px;">$1</h3>')
+        .replace(/^## (.*$)/gm, '<h2 style="margin-bottom: 20px; color: #2c3e50; font-size: 22px;">$1</h2>')
+        // 列表处理
+        .replace(/^- (.*$)/gm, '<li style="margin-bottom: 8px; padding-left: 5px;">$1</li>')
+        // 段落处理（两次换行）
+        .replace(/\n\n/g, '</p><p style="margin-bottom: 15px; line-height: 1.6;">')
+        // 单行换行
+        .replace(/\n/g, '<br>');
+      
+      // 处理列表的开始和结束标签
+      formattedText = formattedText.replace(/<li/g, '<ul style="list-style-type: disc; padding-left: 20px; margin-bottom: 15px;"><li').replace(/<\/li>/g, '</li></ul>');
+      
+      // 添加开始的段落标签
+      if (!formattedText.startsWith('<h')) {
+        formattedText = '<p style="margin-bottom: 15px; line-height: 1.6;">' + formattedText;
+      }
+      
+      // 添加结束的段落标签（如果有开始标签）
+      if (formattedText.includes('<p')) {
+        const paragraphs = formattedText.split('<p');
+        const lastParagraph = paragraphs[paragraphs.length - 1];
+        if (!lastParagraph.includes('</p>')) {
+          formattedText += '</p>';
+        }
+      }
+      
+      return formattedText;
+    } catch (error) {
+      console.error('格式化文本失败:', error);
+      // 如果格式化失败，使用原始文本作为回退
+      return `<p>${text.replace(/\n/g, '<br>')}</p>`;
     }
-}
+  }
 
 // 显示加载状态
 function showLoadingState() {
@@ -75,15 +106,10 @@ async function generateProposal() {
     try {
         // 回调函数处理流式内容块
         const onChunkReceived = (partialContent) => {
+             
             // 更新结果显示
             const formattedResult = formatResultForDisplay(partialContent);
-            resultContainer.innerHTML = `
-                <div style="height: 100%; overflow-y: auto;">
-                    <div style="padding-right: 10px;">
-                        ${formattedResult}
-                    </div>
-                </div>
-            `;
+            resultContainer.innerHTML = `<div style="padding: 20px; background: white; border-radius: 8px; min-height: 100%;">${formattedResult}</div>`;
         };
         
         // 调用API获取结果（流式）

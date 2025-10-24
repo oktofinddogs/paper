@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
     try {
       // 检查是否已加载markdown-it库
       if (window.markdownit && text) {
+        console.log("有markdown库");
         const md = window.markdownit();
         return md.render(text);
       }

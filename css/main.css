@@ -431,7 +431,7 @@ body {
 
 /* 不同状态的进度条颜色 */
 .progress-bar.completed {
-    background-color: #28a745;
+    background-color: #007bff;
 }
 
 .progress-bar.in-progress {
