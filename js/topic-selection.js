@@ -187,8 +187,13 @@ function validateInput() {
         return false;
     }
     
-    // 如果是开题报告评估场景，跳过研究方向的校验
+    // 如果是开题报告评估场景，验证是否已上传文件
     if (pageParams.promptName === 'PROJECT_PROPOSAL_EVALUATION_PROMPT') {
+        const fileInput = document.getElementById('proposal-file');
+        if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+            alert('请先上传开题报告文件');
+            return false;
+        }
         return true;
     }
     
@@ -216,7 +221,27 @@ async function handleGenerateClick() {
     // 获取用户输入
     const major = majorSelect.options[majorSelect.selectedIndex].text;
     const education = getSelectedEducation();
-    const researchDirection = researchDirectionTextarea.value.trim();
+    let researchDirection = researchDirectionTextarea.value.trim();
+    
+    // 如果是开题报告评估场景,需要读取上传的文件内容
+    if (pageParams.promptName === 'PROJECT_PROPOSAL_EVALUATION_PROMPT') {
+        const fileInput = document.getElementById('proposal-file');
+        if (fileInput && fileInput.files && fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+            try {
+                // 读取文件内容
+                const fileContent = await readFileContent(file);
+                researchDirection = fileContent;
+            } catch (error) {
+                alert('文件读取失败，请重新选择文件');
+                console.error('文件读取错误:', error);
+                return;
+            }
+        } else {
+            alert('请先上传开题报告文件');
+            return;
+        }
+    }
     
     // 显示生成中的状态
     generateBtn.disabled = true;
@@ -364,6 +389,55 @@ function formatResultForDisplay(text) {
         // 如果Markdown渲染失败，使用原始文本作为回退
         return `<div class="result-header">${headerText}</div><div class="result-body"><p>${text.replace(/\n/g, '<br>')}</p></div>`;
     }
+}
+
+// 读取文件内容
+function readFileContent(file) {
+    return new Promise((resolve, reject) => {
+        const fileName = file.name.toLowerCase();
+        
+        // 判断是否为Word文档
+        if (fileName.endsWith('.docx') || fileName.endsWith('.doc')) {
+            // 使用mammoth解析Word文档
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const arrayBuffer = e.target.result;
+                
+                // 使用mammoth提取文本
+                mammoth.extractRawText({ arrayBuffer: arrayBuffer })
+                    .then(result => {
+                        resolve(result.value);
+                    })
+                    .catch(error => {
+                        console.error('Word文档解析失败:', error);
+                        reject(new Error('Word文档解析失败'));
+                    });
+            };
+            
+            reader.onerror = function(e) {
+                reject(new Error('文件读取失败'));
+            };
+            
+            // 读取为ArrayBuffer格式供mammoth使用
+            reader.readAsArrayBuffer(file);
+        } else {
+            // 对于纯文本文件,使用原有方式读取
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const content = e.target.result;
+                resolve(content);
+            };
+            
+            reader.onerror = function(e) {
+                reject(new Error('文件读取失败'));
+            };
+            
+            // 读取为文本格式
+            reader.readAsText(file, 'UTF-8');
+        }
+    });
 }
 
 // 当DOM加载完成后初始化应用
