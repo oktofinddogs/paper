@@ -31,9 +31,9 @@ body {
 
 /* 容器样式 */
 .container {
-    max-width: 1400px;
+    width: 100%;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 0px;
     position: relative;
 }
 
@@ -47,7 +47,7 @@ body {
 
 /* Logo样式 */
 .logo-icon {
-    width: 122px;
+    width: 144px;
     height: 29px;
 }
 
@@ -98,7 +98,7 @@ body {
 /* 英雄区域 */
 .hero-section {
     text-align: center;
-    max-width: 800px;
+    width: 100%;
 }
 
 /* 英雄标题 */
@@ -131,12 +131,12 @@ body {
 
 /* 创建项目按钮 */
 .create-project-btn {
-    background-color: #14b8a6;
+    background-color: #00CFC8;
     color: #ffffff;
     border: none;
     padding: 12px 24px;
-    border-radius: 6px;
-    font-size: 16px;
+    border-radius: 10px;
+    font-size: 20px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
