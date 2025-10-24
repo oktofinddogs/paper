@@ -742,7 +742,7 @@
                             </div>
                             <div class="item-tools">
                                 <button class="tool-btn" onclick="navigateToProposal()">AI开题报告</button>
-                                <button class="tool-btn" onclick="window.location.href='proposal-appraise.html'">AI开题报告评估</button>
+                                <button class="tool-btn" onclick="navigateToProposalEvaluation()">AI开题报告评估</button>
                             </div>
                         </div>
                     </div>
@@ -1122,6 +1122,25 @@
             const params = new URLSearchParams();
             params.append('title', '开题报告');
             params.append('prompt', 'PROJECT_PROPOSAL_PROMPT');
+            params.append('projectName', projectName);
+            params.append('major', major);
+            params.append('education', education);
+            
+            // 跳转到topic-selection.html并带上参数
+            window.location.href = `topic-selection.html?${params.toString()}`;
+        }
+        
+        // 跳转到开题报告评估页面并传递参数
+        function navigateToProposalEvaluation() {
+            // 获取当前项目信息
+            const projectName = window.globalProjectName || localStorage.getItem('projectName') || '我的论文项目';
+            const major = window.globalMajor || localStorage.getItem('major') || '计算机';
+            const education = window.globalEducation || localStorage.getItem('education') || '本科';
+            
+            // 构建URL参数
+            const params = new URLSearchParams();
+            params.append('title', '开题报告评估');
+            params.append('prompt', 'PROJECT_PROPOSAL_EVALUATION_PROMPT');
             params.append('projectName', projectName);
             params.append('major', major);
             params.append('education', education);

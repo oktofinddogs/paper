@@ -1,5 +1,5 @@
 // 从API常量文件导入所需常量
-import { API_KEY, ENDPOINT_ID, API_URL, TOPIC_APPRAISAL_PROMPT, PROJECT_PROPOSAL_PROMPT, TOPIC_SELECTION_PROMPT } from './api-constants.js';
+import { API_KEY, ENDPOINT_ID, API_URL, TOPIC_APPRAISAL_PROMPT, PROJECT_PROPOSAL_PROMPT, PROJECT_PROPOSAL_EVALUATION_PROMPT, TOPIC_SELECTION_PROMPT } from './api-constants.js';
 
 // DOM元素
 let majorSelect;
@@ -35,6 +35,26 @@ function init() {
     
     // 添加事件监听器
     generateBtn.addEventListener('click', handleGenerateClick);
+    
+    // 上传按钮事件监听
+    const uploadBtn = document.getElementById('upload-btn');
+    const proposalFile = document.getElementById('proposal-file');
+    const fileName = document.getElementById('file-name');
+    
+    if (uploadBtn && proposalFile && fileName) {
+        uploadBtn.addEventListener('click', () => {
+            proposalFile.click();
+        });
+        
+        proposalFile.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                fileName.textContent = file.name;
+            } else {
+                fileName.textContent = '未选择文件';
+            }
+        });
+    }
 }
 
 // 解析URL参数
@@ -53,6 +73,8 @@ function parseUrlParams() {
         // 根据提示词名称选择对应的提示词
         if (promptName === 'PROJECT_PROPOSAL_PROMPT') {
             currentPrompt = PROJECT_PROPOSAL_PROMPT;
+        } else if (promptName === 'PROJECT_PROPOSAL_EVALUATION_PROMPT') {
+            currentPrompt = PROJECT_PROPOSAL_EVALUATION_PROMPT;
         } else if (promptName === 'TOPIC_SELECTION_PROMPT') {
             currentPrompt = TOPIC_SELECTION_PROMPT;
         } else {
@@ -85,6 +107,26 @@ function initializePageFromParams() {
         
         if (researchTextarea) {
             researchTextarea.placeholder = '请输入论文标题';
+        }
+    }
+    
+    // 如果是AI开题报告评估,显示上传按钮并隐藏研究方向区域
+    if (pageParams.promptName === 'PROJECT_PROPOSAL_EVALUATION_PROMPT') {
+        const uploadSection = document.getElementById('upload-proposal-section');
+        if (uploadSection) {
+            uploadSection.style.display = 'block';
+        }
+        
+        // 隐藏研究方向区域
+        const researchSection = document.getElementById('research-direction-section');
+        if (researchSection) {
+            researchSection.style.display = 'none';
+        }
+        
+        // 修改按钮文案
+        const btnText = document.getElementById('btn-text');
+        if (btnText) {
+            btnText.textContent = '开始评估';
         }
     }
     
@@ -128,6 +170,11 @@ function validateInput() {
     if (!major) {
         alert('请选择论文专业');
         return false;
+    }
+    
+    // 如果是开题报告评估场景，跳过研究方向的校验
+    if (pageParams.promptName === 'PROJECT_PROPOSAL_EVALUATION_PROMPT') {
+        return true;
     }
     
     // 验证研究方向输入
