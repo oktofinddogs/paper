@@ -145,21 +145,23 @@ function initializePageFromParams() {
         }
     }
     
-    // 如果有专业参数，预填充专业下拉框
-    if (pageParams.major && majorSelect) {
+    // 专业字段：优先使用URL参数，否则从localStorage读取
+    const majorValue = pageParams.major || localStorage.getItem('major');
+    if (majorValue && majorSelect) {
         // 查找匹配的选项
         for (let i = 0; i < majorSelect.options.length; i++) {
-            if (majorSelect.options[i].value === pageParams.major) {
+            if (majorSelect.options[i].value === majorValue) {
                 majorSelect.selectedIndex = i;
                 break;
             }
         }
     }
     
-    // 如果有学历参数，预选择学历单选按钮
-    if (pageParams.education && educationRadios) {
+    // 学历字段：优先使用URL参数，否则从localStorage读取
+    const educationValue = pageParams.education || localStorage.getItem('education');
+    if (educationValue && educationRadios) {
         educationRadios.forEach(radio => {
-            if (radio.value === pageParams.education) {
+            if (radio.value === educationValue) {
                 radio.checked = true;
             }
         });
